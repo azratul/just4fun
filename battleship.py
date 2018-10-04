@@ -8,6 +8,7 @@ PLAYERS = ['JUGADOR 1', 'JUGADOR 2']
 BOARD   = [10,10] # rows(máx. 99),cols(máx. 26)
 COLS    = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z']
 GRID    = '⃞ '
+ARROW   = '➔'
 
 team        = [[],[]]
 team_repeat = [[],[]]
@@ -30,16 +31,16 @@ def draw_board():
 	title1 = (' ' * (BOARD[1] - (len(PLAYERS[0]) / 2))) + '\033[1;37m' + PLAYERS[0] + '\033[0;37m' + (' ' * (BOARD[1] - (len(PLAYERS[0]) / 2) - (len(PLAYERS[0]) % 2)))
 	title2 = (' ' * (BOARD[1] - (len(PLAYERS[1]) / 2))) + '\033[1;37m' + PLAYERS[1] + '\033[0;37m' + (' ' * (BOARD[1] - (len(PLAYERS[1]) / 2) - (len(PLAYERS[1]) % 2)))
 	print '''
-┌──────{3}──────┐
+┌─────{3}┬┬{3}─────┐
 │   {0}  ││  {1}   │
-├──────{3}──────┤
-│    \033[1;37m{2}\033[0;37m  ├┤  \033[1;37m{2}\033[0;37m    │'''.format(title1, title2, ' '.join(COLS[:BOARD[1]]), ('────' * BOARD[1]))
+├─────{3}┼┼{3}─────┤
+│    \033[1;33m{2}\033[0;37m  ├┤  \033[1;33m{2}\033[0;37m    │'''.format(title1, title2, ' '.join(COLS[:BOARD[1]]), ('──' * BOARD[1]))
 
 	for x in xrange(BOARD[0]):
 		if (x+1) < 10:
-			print '│\033[1;37m {0} \033[0;37m'.format(x+1),
+			print '│\033[1;33m {0} \033[0;37m'.format(x+1),
 		else:
-			print '│\033[1;37m{0} \033[0;37m'.format(x+1),
+			print '│\033[1;33m{0} \033[0;37m'.format(x+1),
 
 		for y in xrange(BOARD[1]):
 			print '{0}'.format(board_team[0][y][x]),
@@ -50,11 +51,11 @@ def draw_board():
 			print '{0}'.format(board_team[1][y][x]),
 
 		if (x+1) < 10:
-			print '\033[1;37m {0} \033[0;37m│'.format(x+1)
+			print '\033[1;33m {0} \033[0;37m│'.format(x+1)
 		else:
-			print '\033[1;37m {0}\033[0;37m│'.format(x+1)
+			print '\033[1;33m {0}\033[0;37m│'.format(x+1)
 
-	print '└──────{0}──────┘'.format('────' * BOARD[1])
+	print '└─────{0}┴┴{0}─────┘'.format('──' * BOARD[1])
 
 def is_valid(s):
 	try:
@@ -74,7 +75,7 @@ def start():
 
 	while True:
 		try:
-			ships = int(raw_input("Ingrese números de naves(5 por defecto) > ") or "5")
+			ships = int(raw_input("Ingrese números de naves(5 por defecto) " + ARROW + " ") or "5")
 			break
 		except ValueError:
 			continue
@@ -86,7 +87,7 @@ def start():
 			print 'TEAM: {0} ({1} naves)'.format(value, ships)
 			for x in xrange(ships):
 				while True:
-					tmp = getpass.getpass("Ingrese coordenada de nave " + str(x+1) + " > ").upper()
+					tmp = getpass.getpass("Ingrese coordenada de nave " + str(x+1) + " " + ARROW + " ").upper()
 					if tmp in team[key]:
 						print "Ya se encuentra en tu selección"
 						continue
@@ -114,7 +115,7 @@ def play():
 		turn = 1 - turn
 
 		while True:
-			shoot = raw_input("[" + PLAYERS[turn] + "] Ingrese coordenada > ").upper()
+			shoot = raw_input("\033[1;37m❮" + PLAYERS[turn] + "❯\033[0;37m Ingrese coordenada " + ARROW + " ").upper()
 
 			if shoot not in team_repeat[turn]:
 				fill_board(shoot, turn)
@@ -127,7 +128,7 @@ def settings():
 	global PLAYERS, BOARD
 
 	for key, value in enumerate(PLAYERS):
-		PLAYERS[key] = raw_input("Ingrese Nombre de Equipo " + str(key+1) + " > ")
+		PLAYERS[key] = raw_input(" Ingrese nombre de equipo " + str(key+1) + " " + ARROW + " ")
 
 	for key, value in enumerate(BOARD):
 		if key == 0:
@@ -137,7 +138,7 @@ def settings():
 
 		while True:
 			try:
-				BOARD[key] = int(raw_input("Ingrese grilla[" + grid + "] > "))
+				BOARD[key] = int(raw_input(" Ingrese grilla[" + grid + "] " + ARROW + " "))
 				break
 			except ValueError:
 				continue
@@ -145,16 +146,17 @@ def settings():
 def menu():
 	while True:
 		os.system('clear')
-		print '\033[1;31m * * * * * * * * * * * * * * * * * '
-		print ' * * *  B A T T L E S H I P  * * * '
-		print ' * * * * * * * * * * * * * * * * * '
-		print '\033[0;37m'
-		print '[\033[1;37m1\033[0;37m] J U G A R\033[0;37m'
-		print '[\033[1;37m2\033[0;37m] C O N F I G U R A R\033[0;37m'
-		print '[\033[1;37m3\033[0;37m] S A L I R\033[0;37m'
-		print ''
+		print '''\033[1;31m
+ ╔═══════════════════════════════╗
+ ║ * *  B A T T L E S H I P  * * ║
+ ╚═══════════════════════════════╝
+ \033[0;37m
+ \033[1;37m❶\033[0;37m  J U G A R\033[0;37m
+ \033[1;37m❷\033[0;37m  C O N F I G U R A R\033[0;37m
+ \033[1;37m❸\033[0;37m  S A L I R\033[0;37m
+'''
 
-		opt = raw_input("Ingrese Opción > ")
+		opt = raw_input(" Ingrese Opción " + ARROW + " ")
 
 		if opt == "1":
 			start()
