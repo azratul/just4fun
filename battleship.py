@@ -2,20 +2,22 @@
 # -*- coding: utf-8 -*-
 import os
 import getpass
+import time
 
-PLAYERS = ['PRINCIPIANTES', 'DA IGUAL']
-BOARD   = [26,26] # rows(máx. 99),cols(máx. 26)
+PLAYERS = ['JUGADOR 1', 'JUGADOR 2']
+BOARD   = [10,10] # rows(máx. 99),cols(máx. 26)
+COLS    = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z']
+GRID    = '⃞ '
 
 team        = [[],[]]
 team_repeat = [[],[]]
-cols        = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z']
-board_team  = [[['⃞ ' for i in range(BOARD[0])] for j in range(BOARD[1])],[['⃞ ' for i in range(BOARD[0])] for j in range(BOARD[1])]]
+board_team  = [[[GRID for i in range(BOARD[0])] for j in range(BOARD[1])],[[GRID for i in range(BOARD[0])] for j in range(BOARD[1])]]
 
 def fill_board(shoot, turn):
 	os.system('clear')
 	for x in xrange(BOARD[0]):
 		for y in range(0, BOARD[1]):
-			if shoot == cols[y] + str(x + 1):
+			if shoot == COLS[y] + str(x + 1):
 				if shoot in team[1-turn]:
 					team[1-turn].remove(shoot)
 					board_team[1-turn][y][x] = '\033[1;32m★\033[0;37m'
@@ -31,7 +33,7 @@ def draw_board():
 ┌──────{3}──────┐
 │   {0}  ││  {1}   │
 ├──────{3}──────┤
-│    \033[1;37m{2}\033[0;37m  ├┤  \033[1;37m{2}\033[0;37m    │'''.format(title1, title2, ' '.join(cols[:BOARD[1]]), ('────' * BOARD[1]))
+│    \033[1;37m{2}\033[0;37m  ├┤  \033[1;37m{2}\033[0;37m    │'''.format(title1, title2, ' '.join(COLS[:BOARD[1]]), ('────' * BOARD[1]))
 
 	for x in xrange(BOARD[0]):
 		if (x+1) < 10:
@@ -56,16 +58,27 @@ def draw_board():
 
 def is_valid(s):
 	try:
-		if (0 < int(s[1:]) <= BOARD[0]) and s[:1] in cols:
+		if (0 < int(s[1:]) <= BOARD[0]) and s[:1] in COLS:
 			return True
 		return False
 	except ValueError:
 		return False
 
 def start():
+	global team, team_repeat, board_team
+	team        = [[],[]]
+	team_repeat = [[],[]]
+	board_team  = [[[GRID for i in range(BOARD[0])] for j in range(BOARD[1])],[[GRID for i in range(BOARD[0])] for j in range(BOARD[1])]]
+
 	fill_board('', '')
 
-	ships = int(raw_input("Ingrese números de naves(5 por defecto) > ") or "5")
+	while True:
+		try:
+			ships = int(raw_input("Ingrese números de naves(5 por defecto) > ") or "5")
+			break
+		except ValueError:
+			continue
+
 	limit = (BOARD[0] * BOARD[1]) / 2
 
 	if ships > 0 and ships <= limit:
@@ -95,6 +108,7 @@ def play():
 	while True:
 		if len(team[0]) == 0 or len(team[1]) == 0:
 			print "\033[1;32m¡¡¡ E L  E Q U I P O  '{0}'  H A  G A N A D O !!!\033[0;37m".format(PLAYERS[turn])
+			time.sleep(4)
 			break
 
 		turn = 1 - turn
@@ -109,5 +123,45 @@ def play():
 				print '[ Ya dijiste esa coordenada ]'
 				continue
 
+def settings():
+	global PLAYERS, BOARD
+
+	for key, value in enumerate(PLAYERS):
+		PLAYERS[key] = raw_input("Ingrese Nombre de Equipo " + str(key+1) + " > ")
+
+	for key, value in enumerate(BOARD):
+		if key == 0:
+			grid = 'filas'
+		else:
+			grid = 'columnas'
+
+		while True:
+			try:
+				BOARD[key] = int(raw_input("Ingrese grilla[" + grid + "] > "))
+				break
+			except ValueError:
+				continue
+
+def menu():
+	while True:
+		os.system('clear')
+		print '\033[1;31m * * * * * * * * * * * * * * * * * '
+		print ' * * *  B A T T L E S H I P  * * * '
+		print ' * * * * * * * * * * * * * * * * * '
+		print '\033[0;37m'
+		print '[\033[1;37m1\033[0;37m] J U G A R\033[0;37m'
+		print '[\033[1;37m2\033[0;37m] C O N F I G U R A R\033[0;37m'
+		print '[\033[1;37m3\033[0;37m] S A L I R\033[0;37m'
+		print ''
+
+		opt = raw_input("Ingrese Opción > ")
+
+		if opt == "1":
+			start()
+		elif opt == "2":
+			settings()
+		else:
+			break
+
 if __name__ == "__main__":
-	start()
+	menu()
