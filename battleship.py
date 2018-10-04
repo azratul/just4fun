@@ -70,37 +70,38 @@ def start():
 	team        = [[],[]]
 	team_repeat = [[],[]]
 	board_team  = [[[GRID for i in range(BOARD[0])] for j in range(BOARD[1])],[[GRID for i in range(BOARD[0])] for j in range(BOARD[1])]]
+	limit       = (BOARD[0] * BOARD[1]) / 2
 
 	fill_board('', '')
 
 	while True:
 		try:
 			ships = int(raw_input("Ingrese números de naves(5 por defecto) " + ARROW + " ") or "5")
-			break
+			if 0 < ships <= limit:
+				break
+			else:
+				print 'El número de naves debe ser mayor a 0 y menor o igual a {0}'.format(limit)
+				continue
 		except ValueError:
+			print 'Debes ingresar un número'
 			continue
 
-	limit = (BOARD[0] * BOARD[1]) / 2
+	for key, value in enumerate(PLAYERS):
+		print 'TEAM: {0} ({1} naves)'.format(value, ships)
+		for x in xrange(ships):
+			while True:
+				tmp = getpass.getpass("Ingrese coordenada de nave " + str(x+1) + " " + ARROW + " ").upper()
+				if tmp in team[key]:
+					print "Ya se encuentra en tu selección"
+					continue
 
-	if ships > 0 and ships <= limit:
-		for key, value in enumerate(PLAYERS):
-			print 'TEAM: {0} ({1} naves)'.format(value, ships)
-			for x in xrange(ships):
-				while True:
-					tmp = getpass.getpass("Ingrese coordenada de nave " + str(x+1) + " " + ARROW + " ").upper()
-					if tmp in team[key]:
-						print "Ya se encuentra en tu selección"
-						continue
+				if not is_valid(tmp):
+					print "Debe ingresar una coordinada válida"
+					continue
 
-					if not is_valid(tmp):
-						print "Debe ingresar una coordinada válida"
-						continue
-
-					team[key].append(tmp)
-					break
-		play()
-	else:
-		print 'El número de naves debe ser mayor a 0 y menor o igual a {0}'.format(limit)
+				team[key].append(tmp)
+				break
+	play()
 
 def play():
 	fill_board('', '')
@@ -148,7 +149,7 @@ def menu():
 		os.system('clear')
 		print '''\033[1;31m
  ╔═══════════════════════════════╗
- ║ * *  B A T T L E S H I P  * * ║
+ ║ ★ ★  B A T T L E S H I P  ★ ★ ║
  ╚═══════════════════════════════╝
  \033[0;37m
  \033[1;37m❶\033[0;37m  J U G A R\033[0;37m
@@ -162,7 +163,8 @@ def menu():
 			start()
 		elif opt == "2":
 			settings()
-		else:
+		elif opt == "3":
+			print '\033[1;32m¡ H A S T A  L U E G O !\033[0;37m'
 			break
 
 if __name__ == "__main__":
