@@ -4,7 +4,7 @@ import os
 import getpass
 
 PLAYERS = ['PRINCIPIANTES', 'DA IGUAL']
-BOARD   = [40,26] # rows(máx. 99),cols(máx. 26)
+BOARD   = [26,26] # rows(máx. 99),cols(máx. 26)
 
 team        = [[],[]]
 team_repeat = [[],[]]
@@ -68,38 +68,22 @@ def start():
 	ships = int(raw_input("Ingrese números de naves(5 por defecto) > ") or "5")
 	limit = (BOARD[0] * BOARD[1]) / 2
 
-	print ''
-
 	if ships > 0 and ships <= limit:
-		print 'TEAM: {0} ({1} naves)'.format(PLAYERS[0], ships)
-		for x in xrange(ships):
-			while True:
-				tmp = getpass.getpass("Ingrese coordenada de nave " + str(x+1) + " > ").upper()
-				if tmp in team[0]:
-					print "Ya se encuentra en tu selección"
-					continue
+		for key, value in enumerate(PLAYERS):
+			print 'TEAM: {0} ({1} naves)'.format(value, ships)
+			for x in xrange(ships):
+				while True:
+					tmp = getpass.getpass("Ingrese coordenada de nave " + str(x+1) + " > ").upper()
+					if tmp in team[key]:
+						print "Ya se encuentra en tu selección"
+						continue
 
-				if not is_valid(tmp):
-					print "Debe ingresar una coordinada válida"
-					continue
+					if not is_valid(tmp):
+						print "Debe ingresar una coordinada válida"
+						continue
 
-				team[0].append(tmp)
-				break
-
-		print 'TEAM: {0} ({1} naves)'.format(PLAYERS[1], ships)
-		for x in xrange(ships):
-			while True:
-				tmp = getpass.getpass("Ingrese coordenada de nave " + str(x+1) + " > ").upper()
-				if tmp in team[1]:
-					print "Ya se encuentra en tu selección"
-					continue
-
-				if not is_valid(tmp):
-					print "Debe ingresar una coordinada válida"
-					continue
-
-				team[1].append(tmp)
-				break
+					team[key].append(tmp)
+					break
 		play()
 	else:
 		print 'El número de naves debe ser mayor a 0 y menor o igual a {0}'.format(limit)
