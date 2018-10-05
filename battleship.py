@@ -22,9 +22,9 @@ def fill_board(shoot, turn):
 			if shoot == COLS[y] + str(x + 1):
 				if shoot in team[1-turn]:
 					team[1-turn].remove(shoot)
-					board_team[1-turn][y][x] = '\033[1;32m★\033[0;37m'
+					board_team[1-turn][y][x] = '\033[1;32m★ \033[0;37m'
 				else:
-					board_team[1-turn][y][x] = '\033[1;31m✕\033[0;37m'
+					board_team[1-turn][y][x] = '\033[1;31m✕ \033[0;37m'
 				team_repeat[turn].append(shoot)
 	draw_board()
 
