@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+# PYTHON VERSION: 2.7
 import os
 import getpass
 import time
